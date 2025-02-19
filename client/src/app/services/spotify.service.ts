@@ -97,25 +97,33 @@ export class SpotifyService {
     //Again, you may need to encode the artistId.
     const artistIdEncoded = encodeURIComponent(artistId);
     // call sendRequestToExpress for artist based on encodedId, convert response to ArtistData object
-    return this.sendRequestToExpress(`artist/${artistIdEncoded}`).then((data) => new ArtistData(data));
+    return this.sendRequestToExpress(`/artist/${artistIdEncoded}`).then((data) => new ArtistData(data));
   }
 
   getTopTracksForArtist(artistId: string): Promise<TrackData[]> {
     //TODO: use the top tracks endpoint to make a request to express.
     const artistIdEncoded = encodeURIComponent(artistId);
     // Retrieve the top tracks of said artist, convert response to array TrackData
-    return this.sendRequestToExpress(`/artist/${artistIdEncoded}/top-tracks`).then((data) =>
-      data.map((track: any) => new TrackData(track))
-    );
+    return this.sendRequestToExpress(`/artist-top-tracks/${artistIdEncoded}`).then((data) => {
+      if (data && data.tracks) {
+        return data.tracks.map((track: any) => new TrackData(track));
+      }
+      console.log("data struct:", data);
+      return [];
+    });
   }
 
   getAlbumsForArtist(artistId: string): Promise<AlbumData[]> {
     //TODO: use the albums for an artist endpoint to make a request to express.
     const artistIdEncoded = encodeURIComponent(artistId);
     // Call sendRequestToExpress based on encoded id, then convert response to AlbumData array.
-    return this.sendRequestToExpress(`/artist/${artistIdEncoded}/albums`).then((data) =>
-      data.map((album: any) => new AlbumData(album))
-    );
+    return this.sendRequestToExpress(`/artist-albums/${artistIdEncoded}`).then((data) => {
+      // Add proper data extraction
+      if (data && data.items) {
+        return data.items.map((album: any) => new AlbumData(album));
+      }
+      return [];
+    });
   }
 
   getAlbum(albumId: string): Promise<AlbumData> {
