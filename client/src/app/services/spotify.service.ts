@@ -21,6 +21,7 @@ export class SpotifyService {
     // var uri:string = "";
     // Constructs a full URL using the base Express server URL (http://localhost:8888) and requested endpoint
     // This sends request to Express backend
+
     const uri: string = `${this.expressBaseUrl}${endpoint}`;
 
 
@@ -69,17 +70,23 @@ export class SpotifyService {
     // Call the sendRequestToExpress function passing in /search/:category/:resource => ex: /search/artist/Eminem
     // using .map function from js: https://www.w3schools.com/jsref/jsref_map.asp
     return this.sendRequestToExpress(`/search/${category}/${resourceEncoded}`).then((data) => {
+      // If data isn’t an array, adjust the code to extract the array from the response.
+      if (!Array.isArray(data)) {
+        // For example, if the API returns { results: [...] } then:
+        console.log('Raw search data:', data);
+      }
       // search for artist
       if (category === "artist") {
-        return data.map((artist: any) => new ArtistData(artist));
+        return data.artists.items.map((artist: any) => new ArtistData(artist));
       }
       // search for album
       else if (category === "album") {
-        return data.map((album: any) => new AlbumData(album));
+        return data.albums.items.map((album: any) => new AlbumData(album));
       }
       // search for track
       else if (category === "track") {
-        return data.map((track: any) => new TrackData(track));
+        console.log("Tracks response structure:", data.tracks); // Debugging track structure
+        return data.tracks.items.map((track: any) => new TrackData(track));
       }
       return [];
     });
