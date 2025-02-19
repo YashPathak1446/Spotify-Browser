@@ -3,14 +3,12 @@
 .editorconfig
 
 # compiled output
-client/dist
-client/tmp
-client/out-tsc
-client/.angular
+/dist
+/tmp
+/out-tsc
 
 # dependencies
-client/node_modules
-webserver/node_modules
+/node_modules
 
 # IDEs and editors
 /.idea
@@ -39,8 +37,5 @@ testem.log
 /typings
 
 # System Files
-*.DS_Store*
+.DS_Store
 Thumbs.db
-
-webserver/tokens.json
-webserver/client_secret.json
