@@ -131,7 +131,7 @@ export class SpotifyService {
     const albumIdEncoded = encodeURIComponent(albumId);
     // call sendRequestToExpress to get response for encoded album, 
     // then convert response to Album Data array to show albums
-    return this.sendRequestToExpress(`album/${albumIdEncoded}`).then((data) => new AlbumData(data));
+    return this.sendRequestToExpress(`/album/${albumIdEncoded}`).then((data) => new AlbumData(data));
   }
 
   getTracksForAlbum(albumId: string): Promise<TrackData[]> {
@@ -139,9 +139,12 @@ export class SpotifyService {
     const albumIdEncoded = encodeURIComponent(albumId);
     // call sendRequestToExpress to get response for encoded album
     // convert response to track data array to show top tracks in album
-    return this.sendRequestToExpress(`album/${albumIdEncoded}/top-tracks`).then((data) =>
-      data.map((track: any) => new TrackData(track))
-    );
+    return this.sendRequestToExpress(`/album-tracks/${albumIdEncoded}`).then((data) => {
+      if (data && data.items) {
+        return data.items.map((track: any) => new TrackData(track));
+      }
+      return []
+    });
   }
 
   getTrack(trackId: string): Promise<TrackData> {
@@ -149,6 +152,6 @@ export class SpotifyService {
     const trackIdEncoded = encodeURIComponent(trackId);
     // call sendRequestToExpress to get response for encoded trackId
     // convert response to array TrackData to show tracks
-    return this.sendRequestToExpress(`tracks/${trackIdEncoded}`).then((data) => new TrackData(data));
+    return this.sendRequestToExpress(`/track/${trackIdEncoded}`).then((data) => new TrackData(data));
   }
 }
