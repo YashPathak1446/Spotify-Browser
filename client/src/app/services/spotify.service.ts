@@ -143,7 +143,7 @@ export class SpotifyService {
       if (data && data.items) {
         return data.items.map((track: any) => new TrackData(track));
       }
-      return []
+      return
     });
   }
 
